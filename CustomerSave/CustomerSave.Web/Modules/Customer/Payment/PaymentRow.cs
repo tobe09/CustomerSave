@@ -29,7 +29,7 @@ namespace CustomerSave.Customer.Entities
         }
 
         [DisplayName("Amount"), Size(19), DecimalEditor(Decimals = 2, PadDecimals = true), NotNull]
-        public Decimal Amount
+        public Decimal? Amount
         {
             get { return Fields.Amount[this]; }
             set { Fields.Amount[this] = value; }

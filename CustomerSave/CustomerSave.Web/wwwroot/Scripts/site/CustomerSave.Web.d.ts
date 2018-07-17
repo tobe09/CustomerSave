@@ -562,7 +562,7 @@ declare namespace CustomerSave.Customer {
     interface PaymentRow {
         PaymentId?: number;
         CustomerId?: number;
-        Amount?: string;
+        Amount?: number;
         Description?: string;
         CreatedBy?: number;
         CreatedDate?: string;

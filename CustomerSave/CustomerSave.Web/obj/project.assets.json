@@ -15352,11 +15352,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\NEPTUNEDEVELOPMENTX\\source\\repos\\CustomerSave\\CustomerSave\\CustomerSave.Web\\CustomerSave.Web.csproj",
+      "projectUniqueName": "C:\\Users\\NEPTUNEDEVELOPMENTX\\Documents\\Others\\Tobe\\Git\\CustomerSave\\CustomerSave\\CustomerSave.Web\\CustomerSave.Web.csproj",
       "projectName": "CustomerSave.Web",
-      "projectPath": "C:\\Users\\NEPTUNEDEVELOPMENTX\\source\\repos\\CustomerSave\\CustomerSave\\CustomerSave.Web\\CustomerSave.Web.csproj",
+      "projectPath": "C:\\Users\\NEPTUNEDEVELOPMENTX\\Documents\\Others\\Tobe\\Git\\CustomerSave\\CustomerSave\\CustomerSave.Web\\CustomerSave.Web.csproj",
       "packagesPath": "C:\\Users\\NEPTUNEDEVELOPMENTX\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\NEPTUNEDEVELOPMENTX\\source\\repos\\CustomerSave\\CustomerSave\\CustomerSave.Web\\obj\\",
+      "outputPath": "C:\\Users\\NEPTUNEDEVELOPMENTX\\Documents\\Others\\Tobe\\Git\\CustomerSave\\CustomerSave\\CustomerSave.Web\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

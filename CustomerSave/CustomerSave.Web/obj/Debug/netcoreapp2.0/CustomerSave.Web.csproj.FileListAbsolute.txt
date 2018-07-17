@@ -9,3 +9,14 @@ c:\users\neptunedevelopmentx\source\repos\CustomerSave\CustomerSave\CustomerSave
 c:\users\neptunedevelopmentx\source\repos\CustomerSave\CustomerSave\CustomerSave.Web\obj\Debug\netcoreapp2.0\CustomerSave.Web.dll
 c:\users\neptunedevelopmentx\source\repos\CustomerSave\CustomerSave\CustomerSave.Web\obj\Debug\netcoreapp2.0\CustomerSave.Web.pdb
 C:\Users\NEPTUNEDEVELOPMENTX\source\repos\CustomerSave\CustomerSave\CustomerSave.Web\obj\Debug\netcoreapp2.0\CustomerSave.Web.csprojAssemblyReference.cache
+C:\Users\NEPTUNEDEVELOPMENTX\Documents\Others\Tobe\Git\CustomerSave\CustomerSave\CustomerSave.Web\obj\Debug\netcoreapp2.0\CustomerSave.Web.csprojAssemblyReference.cache
+C:\Users\NEPTUNEDEVELOPMENTX\Documents\Others\Tobe\Git\CustomerSave\CustomerSave\CustomerSave.Web\obj\Debug\netcoreapp2.0\CustomerSave.Web.csproj.CoreCompileInputs.cache
+C:\Users\NEPTUNEDEVELOPMENTX\Documents\Others\Tobe\Git\CustomerSave\CustomerSave\CustomerSave.Web\obj\Debug\netcoreapp2.0\CustomerSave.Web.AssemblyInfoInputs.cache
+C:\Users\NEPTUNEDEVELOPMENTX\Documents\Others\Tobe\Git\CustomerSave\CustomerSave\CustomerSave.Web\obj\Debug\netcoreapp2.0\CustomerSave.Web.AssemblyInfo.cs
+C:\Users\NEPTUNEDEVELOPMENTX\Documents\Others\Tobe\Git\CustomerSave\CustomerSave\CustomerSave.Web\obj\Debug\netcoreapp2.0\CustomerSave.Web.dll
+C:\Users\NEPTUNEDEVELOPMENTX\Documents\Others\Tobe\Git\CustomerSave\CustomerSave\CustomerSave.Web\obj\Debug\netcoreapp2.0\CustomerSave.Web.pdb
+C:\Users\NEPTUNEDEVELOPMENTX\Documents\Others\Tobe\Git\CustomerSave\CustomerSave\CustomerSave.Web\bin\Debug\netcoreapp2.0\CustomerSave.Web.deps.json
+C:\Users\NEPTUNEDEVELOPMENTX\Documents\Others\Tobe\Git\CustomerSave\CustomerSave\CustomerSave.Web\bin\Debug\netcoreapp2.0\CustomerSave.Web.runtimeconfig.json
+C:\Users\NEPTUNEDEVELOPMENTX\Documents\Others\Tobe\Git\CustomerSave\CustomerSave\CustomerSave.Web\bin\Debug\netcoreapp2.0\CustomerSave.Web.runtimeconfig.dev.json
+C:\Users\NEPTUNEDEVELOPMENTX\Documents\Others\Tobe\Git\CustomerSave\CustomerSave\CustomerSave.Web\bin\Debug\netcoreapp2.0\CustomerSave.Web.dll
+C:\Users\NEPTUNEDEVELOPMENTX\Documents\Others\Tobe\Git\CustomerSave\CustomerSave\CustomerSave.Web\bin\Debug\netcoreapp2.0\CustomerSave.Web.pdb
