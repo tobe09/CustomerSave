@@ -1,0 +1,29 @@
+{
+  "RootNamespace": "CustomerSave",
+  "ServerTypings": {
+    "Assemblies": []
+  },
+  "Connections": [
+    {
+      "Key": "Default",
+      "Tables": [
+        {
+          "Tablename": "dbo.Customer",
+          "Identifier": "Customer",
+          "Module": "Customer",
+          "PermissionKey": "Administration:General"
+        },
+        {
+          "Tablename": "dbo.Payment",
+          "Identifier": "Payment",
+          "Module": "Customer",
+          "PermissionKey": "Administration:General"
+        }
+      ]
+    }
+  ],
+  "BaseRowClasses": [],
+  "RemoveForeignFields": [],
+  "CustomGenerate": {},
+  "CustomSettings": {}
+}

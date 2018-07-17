@@ -1,0 +1,89 @@
+﻿
+@model CustomerSave.Customer.MakePayment.MakePaymentViewModel
+
+<style>
+    .error-div {
+        margin-top: 14px;
+        margin-bottom: 8px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .shift-right {
+        padding-left: 10px;
+    }
+
+    .item {
+        padding-top: 15px;
+    }
+
+    #submitBtn {
+        margin-top: 15px;
+        width: 120px;
+        height: 40px;
+        font-weight: bold;
+    }
+</style>
+
+
+@using (Html.BeginForm("PostPayment", "MakePayment"))
+{
+        @Html.AntiForgeryToken()
+
+        <div class="row shift-right">
+
+        <div class="col-sm-12"><h3><span class="grid-title">Post Payment</span></h3></div>
+        <hr />
+        <div class="col-sm-12 error-div @ViewBag.CssCLass">@ViewBag.Message</div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CustomerGivenId, htmlAttributes: new { @class = "control-label col-md-6 item" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CustomerGivenId, new { htmlAttributes = 
+               new { @class = "form-control", onkeyup = "getByCustomerGivenId();", placeholder = "Search By Customer Id" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Username, htmlAttributes: new { @class = "control-label col-md-6 item" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Username, new { htmlAttributes =
+               new { @class = "form-control", onkeyup = "getByUsername();", placeholder = "Search By Username" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-6 item" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-6 item" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Amount, htmlAttributes: new { @class = "control-label col-md-6 item" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-6 item" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group col-lg-6 btn-div item">
+            <button id="submitBtn" type="submit" class="btn btn-primary" disabled=@(Model == null ? true : Model.IsSubmitDisabled)>Post</button>
+        </div>
+    </div>
+}
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/CustomerSaveScripts/MakePaymentScript.js")"></script>

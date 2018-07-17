@@ -1,0 +1,25 @@
+﻿namespace CustomerSave.Customer {
+    export interface PaymentRow {
+        PaymentId?: number;
+        PatientId?: number;
+        Amount?: number;
+        Description?: string;
+        CreatedBy?: number;
+        CreatedDate?: string;
+    }
+
+    export namespace PaymentRow {
+        export const idProperty = 'PaymentId';
+        export const nameProperty = 'Description';
+        export const localTextPrefix = 'Customer.Payment';
+
+        export declare const enum Fields {
+            PaymentId = "PaymentId",
+            PatientId = "PatientId",
+            Amount = "Amount",
+            Description = "Description",
+            CreatedBy = "CreatedBy",
+            CreatedDate = "CreatedDate"
+        }
+    }
+}
