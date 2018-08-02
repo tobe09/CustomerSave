@@ -1,11 +1,10 @@
 ﻿
 namespace CustomerSave.Customer.Endpoints
 {
-    using Serenity;
+    using Microsoft.AspNetCore.Mvc;
     using Serenity.Data;
     using Serenity.Services;
     using System.Data;
-    using Microsoft.AspNetCore.Mvc;
     using MyRepository = Repositories.CustomerRepository;
     using MyRow = Entities.CustomerRow;
 
@@ -16,13 +15,13 @@ namespace CustomerSave.Customer.Endpoints
         [HttpPost, AuthorizeCreate(typeof(MyRow))]
         public SaveResponse Create(IUnitOfWork uow, SaveRequest<MyRow> request)
         {
-            return new MyRepository().Create(uow, request);
+            return new MyRepository(this).Create(uow, request);
         }
 
         [HttpPost, AuthorizeUpdate(typeof(MyRow))]
         public SaveResponse Update(IUnitOfWork uow, SaveRequest<MyRow> request)
         {
-            return new MyRepository().Update(uow, request);
+            return new MyRepository(this).Update(uow, request);
         }
  
         [HttpPost, AuthorizeDelete(typeof(MyRow))]

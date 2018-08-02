@@ -14,6 +14,12 @@ namespace CustomerSave.Migrations.DefaultDB
             .WithColumn("Description").AsString(1000).NotNullable()
             .WithColumn("CreatedBy").AsInt32().NotNullable()
             .WithColumn("CreatedDate").AsDateTime().NotNullable();
+            
+            Create.Index("UQ_Payment_Id_Key")
+               .OnTable("Payment")
+               .OnColumn("PaymentId").Ascending()
+               .OnColumn("CustomerId").Ascending()
+               .WithOptions().Unique();
         }
 
         public override void Down()

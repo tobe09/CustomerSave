@@ -17,6 +17,5 @@ namespace CustomerSave.Customer.Columns
         public String FullName { get; set; }
         public String Email { get; set; }
         public Int64 PhoneNo { get; set; }
-        public String HomeAddress { get; set; }
     }
 }

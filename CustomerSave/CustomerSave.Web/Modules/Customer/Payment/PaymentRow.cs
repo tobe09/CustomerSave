@@ -13,7 +13,6 @@ namespace CustomerSave.Customer.Entities
     [ModifyPermission("Administration:General")]
     public sealed class PaymentRow : Row, IIdRow, INameRow
     {
-
         [DisplayName("Payment Id"), Identity]
         public Int32? PaymentId
         {
@@ -21,7 +20,8 @@ namespace CustomerSave.Customer.Entities
             set { Fields.PaymentId[this] = value; }
         }
 
-        [DisplayName("Customer"), NotNull, ForeignKey("[dbo].[Customer]", "CustomerId"), LeftJoin("jCustomer"), TextualField("CustomerCustomerGivenId")]
+        [DisplayName("Customer"), NotNull, ForeignKey("[dbo].[Customer]", "CustomerId"), LeftJoin("jCustomer"), 
+            TextualField("CustomerCustomerGivenId")]
         public Int32? CustomerId
         {
             get { return Fields.CustomerId[this]; }
@@ -35,7 +35,29 @@ namespace CustomerSave.Customer.Entities
             set { Fields.Amount[this] = value; }
         }
 
-        [DisplayName("Description"), Size(1000), NotNull, QuickSearch]
+        [DisplayName("Amount"), Expression("'N' + CONVERT(varchar, CONVERT(MONEY, t0.Amount))"), Size(20), NotNull]
+        public String AmountString
+        {
+            get { return Fields.AmountString[this]; }
+            set { Fields.AmountString[this] = value; }
+        }
+
+        [DisplayName("Total Payment"), ReadOnly(true), 
+            Expression("('N' + CONVERT(varchar, CONVERT(MONEY, (select sum(Amount) from [dbo].[Payment] where CustomerId = t0.CustomerId))))")]
+        public String Total
+        {
+            get { return Fields.Total[this]; }
+            set { Fields.Total[this] = value; }
+        }
+
+        [DisplayName("Manage"), Width(100), Expression("'Comment'")]
+        public String Comment
+        {
+            get { return Fields.Comment[this]; }
+            set { Fields.Comment[this] = value; }
+        }
+
+        [DisplayName("Description"), Width(200), NotNull, QuickSearch]
         public String Description
         {
             get { return Fields.Description[this]; }
@@ -49,7 +71,7 @@ namespace CustomerSave.Customer.Entities
             set { Fields.CreatedBy[this] = value; }
         }
 
-        [DisplayName("Created Date"), NotNull]
+        [DisplayName("Date Added"), NotNull]
         public DateTime? CreatedDate
         {
             get { return Fields.CreatedDate[this]; }
@@ -57,8 +79,7 @@ namespace CustomerSave.Customer.Entities
         }
 
 
-
-        [DisplayName("Customer Given Id"), Expression("jCustomer.[CustomerGivenId]")]
+        [DisplayName("Customer Id"), Width(150), Expression("jCustomer.[CustomerGivenId]")]
         public String CustomerCustomerGivenId
         {
             get { return Fields.CustomerCustomerGivenId[this]; }
@@ -93,7 +114,7 @@ namespace CustomerSave.Customer.Entities
             set { Fields.CustomerMiddleName[this] = value; }
         }
 
-        [DisplayName("Full Name"), Expression("(jCustomer.FirstName + ', ' + jCustomer.LastName + ISNULL(' ' + jCustomer.MiddleName, ''))")]
+        [DisplayName("Full Name"), Expression("(jCustomer.LastName + ', ' + jCustomer.FirstName + ISNULL(' ' + jCustomer.MiddleName, ''))"), QuickSearch]
         public String CustomerFullName
         {
             get { return Fields.CustomerFullName[this]; }
@@ -184,13 +205,17 @@ namespace CustomerSave.Customer.Entities
 
             public DecimalField Amount;
 
+            public StringField AmountString;
+
+            public StringField Total;
+            
             public StringField Description;
 
             public Int32Field CreatedBy;
 
             public DateTimeField CreatedDate;
 
-
+            public StringField Comment;
 
             public StringField CustomerCustomerGivenId;
 

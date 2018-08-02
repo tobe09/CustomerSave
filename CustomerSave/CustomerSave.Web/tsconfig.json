@@ -9,8 +9,13 @@
     "sourceMap": true,
     "outFile": "wwwroot/Scripts/site/CustomerSave.Web.js",
     "target": "es5",
+    //"modules" :  "amd",
+    //"allowJs": true,
+    //"outDir": "/lib/ts",
     "typeRoots": [
       "./node_modules/@types/"
+      //"./node_modules/@aspnet/signalr/dist/esm/",
+      //"./wwwroot/Scripts/site/"
     ]
   },
   "exclude": [

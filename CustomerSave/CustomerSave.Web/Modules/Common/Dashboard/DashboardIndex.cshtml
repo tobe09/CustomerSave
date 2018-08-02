@@ -1,4 +1,4 @@
-﻿@model CustomerSave.Common.DashboardPageModel
+﻿@model CustomerSave.Common.Pages.DashboardController.MyDashboardPagemodel
 @{
     ViewData["Title"] = "Dashboard";
     ViewData["PageId"] = "Dashboard";
@@ -13,13 +13,55 @@
     <h1>@LocalText.Get("Navigation.Dashboard")<small>@Html.Raw(Texts.Site.Dashboard.ContentDescription)</small></h1>
 }
 
+<style>
+    #commentDiv {
+        margin-bottom: 30px;
+        background-color: gainsboro;
+    }
+
+    .comment-table {
+        margin-bottom: 10px;
+    }
+</style>
+
+    <div id="commentDiv" class=" table-responsive">
+        <table class="table table-condensed comment-table">
+            <caption><h4 class="text-center">Outstanding Comments for Payment (@Model.GroupedComments.Count() record@(Model.GroupedComments.Count() <= 1 ? "" : "s"))</h4></caption>
+
+            <tr class="table-header" style="display: @(Model.GroupedComments.Count() > 0 ? "" : "none")">
+                <th width="5%">S/N</th>
+                <th width="35%">Detail</th>
+                <th width="30%">Description</th>
+                <th width="20%">Last Commentator</th>
+                <th width="10%">Link</th>
+            </tr>
+
+            @{int i = 0; }
+            @foreach (var commentGroup in Model.GroupedComments)
+            {
+                <tr data-payment-id="@commentGroup.Key">
+                    <td>@(++i).</td>
+                    <td>@commentGroup.Count() unread comment@(commentGroup.Count() == 1 ? "" : "s") for @commentGroup.First().CustomerGivenId</td>
+                    <td>@commentGroup.First().Description</td>
+                    <td>@commentGroup.First().Username.ToUpper() (@commentGroup.First().CreatedDate.ToShortDateString())</td>
+                    <td><a href="/Customer/Payment?paymentId=@commentGroup.Key">Open</a></td>
+                </tr>
+            }
+        </table>
+    </div>
+
+<script type="text/javascript">
+    const dashboardPage = new CustomerSave.Customer.Dashboard();
+    dashboardPage.initializepage();
+</script>
+
 <!-- Small boxes (Stat box) -->
 <div class="row">
     <div class="col-lg-3 col-xs-6">
         <!-- small box -->
         <div class="small-box bg-aqua">
             <div class="inner">
-                <h3>@Model.OpenOrders</h3>
+                <h3>@Model.DashboardPageModel.OpenOrders</h3>
                 <p>Open Orders</p>
             </div>
             <div class="icon">
@@ -32,7 +74,7 @@
         <!-- small box -->
         <div class="small-box bg-green">
             <div class="inner">
-                <h3>@Model.ClosedOrderPercent<sup style="font-size: 20px">%</sup></h3>
+                <h3>@Model.DashboardPageModel.ClosedOrderPercent<sup style="font-size: 20px">%</sup></h3>
                 <p>Closed Orders</p>
             </div>
             <div class="icon">
@@ -45,7 +87,7 @@
         <!-- small box -->
         <div class="small-box bg-yellow">
             <div class="inner">
-                <h3>@Model.CustomerCount</h3>
+                <h3>@Model.DashboardPageModel.CustomerCount</h3>
                 <p>Total Customers</p>
             </div>
             <div class="icon">
@@ -58,7 +100,7 @@
         <!-- small box -->
         <div class="small-box bg-red">
             <div class="inner">
-                <h3>@Model.ProductCount</h3>
+                <h3>@Model.DashboardPageModel.ProductCount</h3>
                 <p>Different Products</p>
             </div>
             <div class="icon">

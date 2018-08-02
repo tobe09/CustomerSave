@@ -8,6 +8,7 @@
     "url": "https://github.com/volkanceylan/serene"
   },
   "dependencies": {
+    "@aspnet/signalr": "^1.0.2",
     "@types/jquery": "^2.0.39",
     "@types/jquery.blockui": "0.0.27",
     "@types/jquery.cookie": "^1.4.28",

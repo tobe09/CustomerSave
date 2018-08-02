@@ -1,4 +1,5 @@
-﻿/// <reference types="jquery" />
+﻿/// <reference path="../../../node_modules/@aspnet/signalr/dist/esm/index.d.ts" />
+/// <reference types="jquery" />
 /// <reference types="jqueryui" />
 declare namespace CustomerSave.Administration {
 }
@@ -28,7 +29,7 @@ declare namespace CustomerSave.Administration {
         const enum Fields {
             Id = "Id",
             LanguageId = "LanguageId",
-            LanguageName = "LanguageName",
+            LanguageName = "LanguageName"
         }
     }
 }
@@ -45,7 +46,7 @@ declare namespace CustomerSave.Administration {
             Update = "Administration/Language/Update",
             Delete = "Administration/Language/Delete",
             Retrieve = "Administration/Language/Retrieve",
-            List = "Administration/Language/List",
+            List = "Administration/Language/List"
         }
     }
 }
@@ -87,7 +88,7 @@ declare namespace CustomerSave.Administration {
             RolePermissionId = "RolePermissionId",
             RoleId = "RoleId",
             PermissionKey = "PermissionKey",
-            RoleRoleName = "RoleRoleName",
+            RoleRoleName = "RoleRoleName"
         }
     }
 }
@@ -98,7 +99,7 @@ declare namespace CustomerSave.Administration {
         function List(request: RolePermissionListRequest, onSuccess?: (response: RolePermissionListResponse) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
         const enum Methods {
             Update = "Administration/RolePermission/Update",
-            List = "Administration/RolePermission/List",
+            List = "Administration/RolePermission/List"
         }
     }
 }
@@ -123,7 +124,7 @@ declare namespace CustomerSave.Administration {
         function getLookup(): Q.Lookup<RoleRow>;
         const enum Fields {
             RoleId = "RoleId",
-            RoleName = "RoleName",
+            RoleName = "RoleName"
         }
     }
 }
@@ -140,7 +141,7 @@ declare namespace CustomerSave.Administration {
             Update = "Administration/Role/Update",
             Delete = "Administration/Role/Delete",
             Retrieve = "Administration/Role/Retrieve",
-            List = "Administration/Role/List",
+            List = "Administration/Role/List"
         }
     }
 }
@@ -177,7 +178,7 @@ declare namespace CustomerSave.Administration {
         const enum Methods {
             ListConnections = "Administration/Sergen/ListConnections",
             ListTables = "Administration/Sergen/ListTables",
-            Generate = "Administration/Sergen/Generate",
+            Generate = "Administration/Sergen/Generate"
         }
     }
 }
@@ -210,7 +211,7 @@ declare namespace CustomerSave.Administration {
         function Update(request: TranslationUpdateRequest, onSuccess?: (response: Serenity.SaveResponse) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
         const enum Methods {
             List = "Administration/Translation/List",
-            Update = "Administration/Translation/Update",
+            Update = "Administration/Translation/Update"
         }
     }
 }
@@ -266,7 +267,7 @@ declare namespace CustomerSave.Administration {
             PermissionKey = "PermissionKey",
             Granted = "Granted",
             Username = "Username",
-            User = "User",
+            User = "User"
         }
     }
 }
@@ -281,7 +282,7 @@ declare namespace CustomerSave.Administration {
             Update = "Administration/UserPermission/Update",
             List = "Administration/UserPermission/List",
             ListRolePermissions = "Administration/UserPermission/ListRolePermissions",
-            ListPermissionKeys = "Administration/UserPermission/ListPermissionKeys",
+            ListPermissionKeys = "Administration/UserPermission/ListPermissionKeys"
         }
     }
 }
@@ -318,7 +319,7 @@ declare namespace CustomerSave.Administration {
             UserId = "UserId",
             RoleId = "RoleId",
             Username = "Username",
-            User = "User",
+            User = "User"
         }
     }
 }
@@ -329,7 +330,7 @@ declare namespace CustomerSave.Administration {
         function List(request: UserRoleListRequest, onSuccess?: (response: UserRoleListResponse) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
         const enum Methods {
             Update = "Administration/UserRole/Update",
-            List = "Administration/UserRole/List",
+            List = "Administration/UserRole/List"
         }
     }
 }
@@ -381,7 +382,7 @@ declare namespace CustomerSave.Administration {
             InsertUserId = "InsertUserId",
             InsertDate = "InsertDate",
             UpdateUserId = "UpdateUserId",
-            UpdateDate = "UpdateDate",
+            UpdateDate = "UpdateDate"
         }
     }
 }
@@ -400,7 +401,7 @@ declare namespace CustomerSave.Administration {
             Delete = "Administration/User/Delete",
             Undelete = "Administration/User/Undelete",
             Retrieve = "Administration/User/Retrieve",
-            List = "Administration/User/List",
+            List = "Administration/User/List"
         }
     }
 }
@@ -441,7 +442,7 @@ declare namespace CustomerSave.Common {
             UserId = "UserId",
             PreferenceType = "PreferenceType",
             Name = "Name",
-            Value = "Value",
+            Value = "Value"
         }
     }
 }
@@ -452,7 +453,7 @@ declare namespace CustomerSave.Common {
         function Retrieve(request: UserPreferenceRetrieveRequest, onSuccess?: (response: UserPreferenceRetrieveResponse) => void, opt?: Q.ServiceOptions<any>): JQueryXHR;
         const enum Methods {
             Update = "Common/UserPreference/Update",
-            Retrieve = "Common/UserPreference/Retrieve",
+            Retrieve = "Common/UserPreference/Retrieve"
         }
     }
 }
@@ -519,7 +520,7 @@ declare namespace CustomerSave.Customer {
             CreatedBy = "CreatedBy",
             CreatedDate = "CreatedDate",
             ModifiedBy = "ModifiedBy",
-            ModifiedDate = "ModifiedDate",
+            ModifiedDate = "ModifiedDate"
         }
     }
 }
@@ -536,7 +537,7 @@ declare namespace CustomerSave.Customer {
             Update = "Customer/Customer/Update",
             Delete = "Customer/Customer/Delete",
             Retrieve = "Customer/Customer/Retrieve",
-            List = "Customer/Customer/List",
+            List = "Customer/Customer/List"
         }
     }
 }
@@ -551,6 +552,8 @@ declare namespace CustomerSave.Customer {
         CustomerLastName: Serenity.StringEditor;
         Amount: Serenity.DecimalEditor;
         Description: Serenity.StringEditor;
+        CreatedDate: Serenity.DateEditor;
+        Total: Serenity.StringEditor;
     }
     class PaymentForm extends Serenity.PrefixedContext {
         static formKey: string;
@@ -563,9 +566,12 @@ declare namespace CustomerSave.Customer {
         PaymentId?: number;
         CustomerId?: number;
         Amount?: number;
+        AmountString?: string;
+        Total?: string;
         Description?: string;
         CreatedBy?: number;
         CreatedDate?: string;
+        Comment?: string;
         CustomerCustomerGivenId?: string;
         CustomerUsername?: string;
         CustomerFirstName?: string;
@@ -589,9 +595,12 @@ declare namespace CustomerSave.Customer {
             PaymentId = "PaymentId",
             CustomerId = "CustomerId",
             Amount = "Amount",
+            AmountString = "AmountString",
+            Total = "Total",
             Description = "Description",
             CreatedBy = "CreatedBy",
             CreatedDate = "CreatedDate",
+            Comment = "Comment",
             CustomerCustomerGivenId = "CustomerCustomerGivenId",
             CustomerUsername = "CustomerUsername",
             CustomerFirstName = "CustomerFirstName",
@@ -605,7 +614,7 @@ declare namespace CustomerSave.Customer {
             CustomerCreatedBy = "CustomerCreatedBy",
             CustomerCreatedDate = "CustomerCreatedDate",
             CustomerModifiedBy = "CustomerModifiedBy",
-            CustomerModifiedDate = "CustomerModifiedDate",
+            CustomerModifiedDate = "CustomerModifiedDate"
         }
     }
 }
@@ -622,7 +631,7 @@ declare namespace CustomerSave.Customer {
             Update = "Customer/Payment/Update",
             Delete = "Customer/Payment/Delete",
             Retrieve = "Customer/Payment/Retrieve",
-            List = "Customer/Payment/List",
+            List = "Customer/Payment/List"
         }
     }
 }
@@ -750,10 +759,19 @@ declare namespace CustomerSave {
         };
     }
 }
-declare namespace CustomerSave.LanguageList {
-    function getValue(): string[][];
-}
-declare namespace CustomerSave.ScriptInitialization {
+declare namespace CustomerSave {
+    class General {
+        static Constants: {
+            Sitename: string;
+            HubAddress: string;
+        };
+        getCommentHubConnection(): signalR.HubConnection;
+        showErrorMsg(msg?: string, msgSpan?: JQuery): void;
+        showSuccessMsg(msg?: string, msgSpan?: JQuery): void;
+        networkApi(url: string, data: object, type?: string): PromiseLike<any>;
+        formatServerDate(date: string): string;
+        newCountForText(text: string, increment: number, valSingular?: string, valPlural?: string): string;
+    }
 }
 declare namespace CustomerSave.Administration {
     class LanguageDialog extends Serenity.EntityDialog<LanguageRow, any> {
@@ -866,26 +884,30 @@ declare namespace CustomerSave.Administration {
         protected getDefaultSortBy(): UserRow.Fields[];
     }
 }
+declare namespace CustomerSave.Authorization {
+    let userDefinition: ScriptUserDefinition;
+    function hasPermission(permissionKey: string): boolean;
+}
 declare namespace CustomerSave.Administration {
     class PermissionCheckEditor extends Serenity.DataGrid<PermissionCheckItem, PermissionCheckEditorOptions> {
         protected getIdProperty(): string;
         private searchText;
         private byParentKey;
         constructor(container: JQuery, opt: PermissionCheckEditorOptions);
-        private getItemGrantRevokeClass(item, grant);
-        private roleOrImplicit(key);
-        private getItemEffectiveClass(item);
+        private getItemGrantRevokeClass;
+        private roleOrImplicit;
+        private getItemEffectiveClass;
         protected getColumns(): Slick.Column[];
         setItems(items: PermissionCheckItem[]): void;
         protected onViewSubmit(): boolean;
         protected onViewFilter(item: PermissionCheckItem): boolean;
-        private matchContains(item);
-        private getDescendants(item, excludeGroups);
+        private matchContains;
+        private getDescendants;
         protected onClick(e: any, row: any, cell: any): void;
-        private getParentKey(key);
+        private getParentKey;
         protected getButtons(): Serenity.ToolButton[];
         protected createToolbarExtensions(): void;
-        private getSortedGroupAndPermissionKeys(titleByKey);
+        private getSortedGroupAndPermissionKeys;
         value: UserPermissionRow[];
         private _rolePermissions;
         rolePermissions: string[];
@@ -935,6 +957,22 @@ declare namespace CustomerSave.Administration {
     interface UserRoleDialogOptions {
         userID: number;
         username: string;
+    }
+}
+declare namespace CustomerSave.LanguageList {
+    function getValue(): string[][];
+}
+declare namespace CustomerSave.ScriptInitialization {
+}
+declare namespace CustomerSave.Customer {
+    class Dashboard extends CustomerSave.General {
+        private connection;
+        constructor();
+        initializepage(): void;
+        private onCommentAdded;
+        private resetHeding;
+        private resetSerialNo;
+        private getRowHtml;
     }
 }
 declare namespace CustomerSave {
@@ -1056,7 +1094,7 @@ declare namespace CustomerSave {
     class StaticTextBlock extends Serenity.Widget<StaticTextBlockOptions> implements Serenity.ISetEditValue {
         private value;
         constructor(container: JQuery, options: StaticTextBlockOptions);
-        private updateElementContent();
+        private updateElementContent;
         /**
          * By implementing ISetEditValue interface, we allow this editor to display its field value.
          * But only do this when our text content is not explicitly set in options
@@ -1196,6 +1234,51 @@ declare namespace CustomerSave.Customer {
     }
 }
 declare namespace CustomerSave.Customer {
+    class MakePayments extends CustomerSave.General {
+        initializePage(): void;
+        checkByCustomerGivenId(e: JQueryKeyEventObject): void;
+        checkByUsername(e: JQueryKeyEventObject): void;
+        private displayInfo;
+        private setValues;
+    }
+}
+declare namespace CustomerSave.Customer {
+    class Payment extends CustomerSave.General {
+        private connection;
+        private constants;
+        constructor();
+        initializePage(): PromiseLike<void>;
+        private removeSereneDefaults;
+        private handleAlertClick;
+        private handleAlertDismiss;
+        private handleCommentLinkClick;
+        commentClickDisplayInfo(commentLink: JQuery): boolean;
+        private returnedCommentsForPayment;
+        private setAlertMargin;
+        private commentAddClick;
+        private commentReturnedAfterAdd;
+        private singleAlertHtml;
+        private displayComments;
+        private showNoOfComments;
+        private UpdateCommentTrackForPayment;
+        private htmlText;
+        private modalShown;
+        private modalHidden;
+        private scrollCommentBottom;
+    }
+    interface IComment {
+        commentText: string;
+        adminUsername: string;
+        paymentId: number;
+        date: string;
+    }
+    interface IPaymentInfo {
+        customerUsername: string;
+        customerGivenId: string;
+        description: string;
+    }
+}
+declare namespace CustomerSave.Customer {
     class PaymentDialog extends Serenity.EntityDialog<PaymentRow, any> {
         protected getFormKey(): string;
         protected getIdProperty(): string;
@@ -1213,11 +1296,8 @@ declare namespace CustomerSave.Customer {
         protected getLocalTextPrefix(): string;
         protected getService(): string;
         constructor(container: JQuery);
+        protected getQuickSearchFields(): Serenity.QuickSearchField[];
     }
-}
-declare namespace CustomerSave.Authorization {
-    let userDefinition: ScriptUserDefinition;
-    function hasPermission(permissionKey: string): boolean;
 }
 declare namespace CustomerSave.Membership {
     class ChangePasswordPanel extends Serenity.PropertyPanel<ChangePasswordRequest, any> {

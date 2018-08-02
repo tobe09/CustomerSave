@@ -24,17 +24,31 @@ namespace CustomerSave.Migrations.DefaultDB
                 .WithColumn("UpdateUserId").AsInt32().Nullable()
                 .WithColumn("IsActive").AsInt16().NotNullable().WithDefaultValue(1));
 
-            Insert.IntoTable("Users").Row(new {
-                Username = "admin",
-                DisplayName = "admin",
-                Email = "admin@dummy.com",
-                Source = "site",
-                PasswordHash = "rfqpSPYs0ekFlPyvIRTXsdhE/qrTHFF+kKsAUla7pFkXL4BgLGlTe89GDX5DBysenMDj8AqbIZPybqvusyCjwQ",
-                PasswordSalt = "hJf_F",
-                InsertDate = new DateTime(2014, 1, 1),
-                InsertUserId = 1,
-                IsActive = 1
-            });
+            Insert.IntoTable("Users")
+                .Row(new
+                {
+                    Username = "admin",
+                    DisplayName = "admin",
+                    Email = "admin@dummy.com",
+                    Source = "site",
+                    PasswordHash = "rfqpSPYs0ekFlPyvIRTXsdhE/qrTHFF+kKsAUla7pFkXL4BgLGlTe89GDX5DBysenMDj8AqbIZPybqvusyCjwQ",
+                    PasswordSalt = "hJf_F",
+                    InsertDate = new DateTime(2014, 1, 1),
+                    InsertUserId = 1,
+                    IsActive = 1
+                })
+                .Row(new
+                {
+                    Username = "adminTwo",
+                    DisplayName = "adminTwo",
+                    Email = "admin2@dummy.com",
+                    Source = "site",
+                    PasswordHash = "rfqpSPYs0ekFlPyvIRTXsdhE/qrTHFF+kKsAUla7pFkXL4BgLGlTe89GDX5DBysenMDj8AqbIZPybqvusyCjwQ",
+                    PasswordSalt = "hJf_F",
+                    InsertDate = new DateTime(2018, 7, 25),
+                    InsertUserId = 2,
+                    IsActive = 1
+                });
 
             this.CreateTableWithId32("Languages", "Id", s => s
                 .WithColumn("LanguageId").AsString(10).NotNullable()

@@ -12,5 +12,14 @@ namespace CustomerSave.Customer {
         constructor(container: JQuery) {
             super(container);
         }
+
+        protected getQuickSearchFields(): Serenity.QuickSearchField[] {
+            return [
+                { name: "", title: "All" },
+                { name: PaymentRow.Fields.CustomerFullName, title: "Full Name" },
+                { name: PaymentRow.Fields.CustomerCustomerGivenId, title: "Customer id" },
+                { name: PaymentRow.Fields.Description, title: "Description" }
+            ];
+        }
     }
 }

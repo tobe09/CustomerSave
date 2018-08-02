@@ -1,13 +1,135 @@
-﻿@{
+﻿@model IEnumerable<IGrouping<int, CustomerSave.Hubs.Classes.CommentInfo>>
+
+@{
     ViewData["Title"] = Serenity.LocalText.Get("Db.Customer.Payment.EntityPlural");
 }
 
-<div id="GridDiv"></div>
+
+<style type="text/css">
+    .single-alert {
+        bottom: 0;
+        margin-left: 10px;
+        margin-right: 10px;
+        padding-top: 5px;
+        padding-bottom: 3px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .showCommentDiv {
+        width: 98%;
+    }
+
+    .last-comment-user {
+        margin-right: 15px;
+    }
+
+    .open-link {
+        margin-right: 15px;
+        font-size: 15px;
+        color: white;
+    }
+
+    #commentInput {
+        width: 100%;
+        background-color: bisque;
+        height: 60px;
+        font-size: 18px;
+    }
+</style>
+
+
+<div class="comment-alerts">
+    @foreach (var commentGroup in Model)
+    {
+        <div class="row alert-success fade in single-alert" data-payment-id="@commentGroup.Key">
+            <div class="pull-right">
+                <a href="#" class="open-link">Open</a>
+                <a href="#" class="close">&times;</a>
+            </div>
+            <div class="showCommentDiv">
+                <div class="newCommentText">
+                    <div class="col-md-4 detail">
+                        @commentGroup.Count() unread comment@(commentGroup.Count() == 1 ? "" : "s") for @commentGroup.First().CustomerGivenId
+                    </div>
+                    <div class="col-md-3">
+                        @commentGroup.First().Description
+                    </div>
+                    <div class="col-md-4 last-comment-user">
+                        Last Commentator: @commentGroup.First().Username.ToUpper() (@commentGroup.First().CreatedDate.ToShortDateString())
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div id="GridDiv"> </div>
+
 
 <script type="text/javascript">
     jQuery(function () {
         new CustomerSave.Customer.PaymentGrid($('#GridDiv'), {}).init();
 
         Q.initFullHeightGridPage($('#GridDiv'));
+
+        const payment = new CustomerSave.Customer.Payment();
+        setTimeout(() => {
+            payment.initializePage().then(() => {
+                @{ int paymentId = (int)ViewData["PaymentId"]; }      //check if a query string was sent
+                if (@paymentId != -1) {     //valid payment id
+                    const commentLink = $('a:contains("Comment")').filter(function () {     //find exact comment link for payment Id
+                        return $(this).data('item-id') === @paymentId;
+                    });
+
+                    payment.commentClickDisplayInfo(commentLink);     //display comment modal
+                }
+            });
+        }, 500);
     });
 </script>
+
+
+<div class="modal fade" id="commentModal" aria-labelledby="commentLabel" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title text-center label-primary" id="commentLabel" style="padding:5px;">View Comment(s)</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:red;">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <br />
+                <div class="row">
+                    <div class="col-xs-4"> <label class="control-label">Customer Id: </label></div>
+                    <div class="col-xs-7"><span id="customerIdSpan" class="form-control"></span></div>
+                    <div class="col-xs-4"><label class="control-label">Description: </label></div>
+                    <div class="col-xs-7"><span id="descriptionSpan" class="form-control"></span></div>
+                    <div class="col-xs-4"><label class="control-label">Amount: </label></div>
+                    <div class="col-xs-7"><span id="amountSpan" class="form-control"></span></div>
+                    <div class="col-xs-4"><label class="control-label">Date Added: </label></div>
+                    <div class="col-xs-7"><span id="dateSpan" class="form-control"></span></div>
+                </div>
+                <div class="text-center" style="margin:10px;">
+                    <b>
+                        <span id="errMsg" class="text-danger" style="margin-right:30px;"></span>
+                        <span id="commentMsg"></span>
+                    </b>
+                </div>
+            </div>
+            <div class="modal-body" style="margin-top:-30px;">
+                <div id="commentBody" class="row" style="overflow:auto;max-height:45vh;">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row" style="margin:10px;">
+                    <div class="col-sm-10">
+                        <textarea id="commentInput" placeholder="Enter Comment"></textarea>
+                    </div>
+                    <div class="col-sm-2" style="float:left;">
+                        <button id="addCommentBtn" class="btn btn-primary">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

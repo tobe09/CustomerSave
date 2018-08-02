@@ -6,7 +6,12 @@ namespace CustomerSave.Customer.Pages
 
     public class MakePaymentController : Controller
     {
-        private IMakePaymentService makePaymentService = new MakePaymentService();
+        private IMakePaymentService makePaymentService;
+
+        public MakePaymentController(IMakePaymentService makePaymentService)
+        {
+            this.makePaymentService = makePaymentService;
+        }
 
         [Route("Customer/MakePayment")]
         public ActionResult Index()
@@ -15,10 +20,10 @@ namespace CustomerSave.Customer.Pages
         }
 
         [HttpPost]
-        [Route("Customer/PostPayment")]
+        [Route("MakePayment/[action]")]
         public ActionResult PostPayment(MakePaymentViewModel model)
         {
-            string errMsg = makePaymentService.PostPayment(model, Membership.User.CurrentUser.UserId);
+            string errMsg = makePaymentService.PostPayment(model, Membership.User.GetCurrentUser(Request.HttpContext).UserId);
 
             if (errMsg != null)
             {
@@ -35,7 +40,7 @@ namespace CustomerSave.Customer.Pages
             return View("~/Modules/Customer/MakePayment/MakePaymentIndex.cshtml");
         }
 
-        [Route("Customer/GetCustomerByGivenId")]
+        [Route("Customer/[action]")]
         public ActionResult GetCustomerByGivenId(string customerGivenId)
         {
             var customer = makePaymentService.GetCustomerByGivenId(customerGivenId);
@@ -43,7 +48,7 @@ namespace CustomerSave.Customer.Pages
             return Json(customer);
         }
 
-        [Route("Customer/GetCustomerByUsername")]
+        [Route("Customer/[action]")]
         public ActionResult GetCustomerByUsername(string username)
         {
             var customer = makePaymentService.GetCustomerByUsername(username);

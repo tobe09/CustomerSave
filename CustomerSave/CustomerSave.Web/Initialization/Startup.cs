@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using CustomerSave.AppServices;
+using CustomerSave.Hubs;
+using CustomerSave.Web.Initialization;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -7,7 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
-using CustomerSave.AppServices;
 using Serenity;
 using Serenity.Abstractions;
 using Serenity.Data;
@@ -31,11 +33,15 @@ namespace CustomerSave
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSession(options => {
+                options.Cookie.HttpOnly = true;
+            });
             services.AddAntiforgery(options => options.HeaderName = "X-CSRF-TOKEN");
             services.AddMvc(options =>
             {
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                 options.Filters.Add(typeof(AntiforgeryCookieResultFilterAttribute));
+                options.Filters.Add(typeof(LoginAuthenticationFilter));
                 options.ModelBinderProviders.Insert(0, new ServiceEndpointModelBinderProvider());
                 options.Conventions.Add(new ServiceEndpointActionModelConvention());
             })
@@ -65,6 +71,12 @@ namespace CustomerSave
             services.AddSingleton<IAuthorizationService, Administration.AuthorizationService>();
             services.AddSingleton<IUserRetrieveService, Administration.UserRetrieveService>();
             services.AddSingleton<IPermissionService, Administration.PermissionService>();
+
+            //signalR reference
+            services.AddSignalR();
+
+            //my services
+            services.AddCustomerSaveServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -118,11 +130,18 @@ namespace CustomerSave
             app.UseAuthentication();
 
             app.UseDynamicScripts();
+            app.UseSession();
             app.UseMvc(routes =>
             {
             });
 
             DataMigrations.Initialize();
+
+            app.UseStaticFiles();
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<CommentHub>("/CommentHub");
+            });
         }
 
         public static void RegisterDataProviders()

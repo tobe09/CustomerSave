@@ -1,44 +1,43 @@
-﻿using CustomerSave.Customer.Entities;
-using CustomerSave.Common;
-using Dapper;
-using System;
+﻿using Serenity.Services;
+using System.Collections.Generic;
 
 namespace CustomerSave.Customer.MakePayment
 {
     public class MakePaymentService : IMakePaymentService
     {
+        private IMakePaymentDataAccess makePaymentDao;
+
+        public MakePaymentService(IMakePaymentDataAccess makePaymentDao)
+        {
+            this.makePaymentDao = makePaymentDao;
+        }
+
         public MakePaymentViewModel GetCustomerByGivenId(string customerGivenId)
         {
-            var connection = DatabaseHelper.GetConnection();
-            string query = "select * from [dbo].Customer where UPPER(CustomerGivenid) = @customerGivenId";
-            return connection.QueryFirstOrDefault<MakePaymentViewModel>(query, new { customerGivenId = customerGivenId?.ToUpper() });
+            return makePaymentDao.GetCustomerByGivenId(customerGivenId);
         }
 
         public MakePaymentViewModel GetCustomerByUsername(string username)
         {
-            var connection = DatabaseHelper.GetConnection();
-            string query = "select * from [dbo].Customer where UPPER(Username) = @username";
-            return connection.QueryFirstOrDefault<MakePaymentViewModel>(query, new { username = username?.ToUpper() });
+            return makePaymentDao.GetCustomerByUsername(username);
         }
 
         public string PostPayment(MakePaymentViewModel model, int createdBy)
         {
-            try
+            try { model.Validate(); }
+            catch (ValidationError ex) { return ex.Message; }
+
+            int customerId = makePaymentDao.GetCustomerIdFromGivenId(model.CustomerGivenId);
+
+            int status = makePaymentDao.InsertPaymentRecord(customerId, model.Amount, model.Description, createdBy);
+            int paymentId = makePaymentDao.GetInsertedPaymentId();
+
+            IEnumerable<int> userIds = makePaymentDao.GetAllUserIds();
+            foreach(int userId in userIds)
             {
-                model.Validate();
+                makePaymentDao.InsertCommentTracksForPayment(paymentId, userId);        //initialize record for comment management and tracking
             }
-            catch(Exception ex)
-            {
-                return ex.Message;
-            }
-
-            var connection = DatabaseHelper.GetConnection();
-            string selectQuery = "select * from [dbo].Customer where CustomerGivenId = @CustomerGivenId";
-            int customerId = (int)connection.QueryFirst<CustomerRow>(selectQuery, new { model.CustomerGivenId }).CustomerId;
-
-            string insertQuery = "insert into [dbo].Payment values(@CustomerId, @Amount, @Description, @CreatedBy, @CreatedDate)";  
-            int status = connection.Execute(insertQuery, new { customerId, model.Amount, model.Description, createdBy, CreatedDate = DateTime.Now });
-
+            
             return status == 0 ? "Error occured while saving payment" : null;
         }
     }

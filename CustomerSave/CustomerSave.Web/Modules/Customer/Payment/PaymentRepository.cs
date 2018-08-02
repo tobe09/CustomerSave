@@ -34,6 +34,7 @@ namespace CustomerSave.Customer.Repositories
 
         public ListResponse<MyRow> List(IDbConnection connection, ListRequest request)
         {
+            request.Sort = new[] { new SortBy("CustomerId") };
             return new MyListHandler().Process(connection, request);
         }
 

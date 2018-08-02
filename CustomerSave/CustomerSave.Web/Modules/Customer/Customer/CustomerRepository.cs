@@ -2,6 +2,7 @@
 namespace CustomerSave.Customer.Repositories
 {
     using CustomerSave.Membership;
+    using Microsoft.AspNetCore.Mvc;
     using Serenity.Data;
     using Serenity.Services;
     using System;
@@ -11,16 +12,21 @@ namespace CustomerSave.Customer.Repositories
 
     public class CustomerRepository
     {
+        private Controller controller;
+
+        public CustomerRepository() : base() { }
+        public CustomerRepository(Controller controller) : base() { this.controller = controller; }
+
         private static MyRow.RowFields Fld { get { return MyRow.Fields; } }
 
         public SaveResponse Create(IUnitOfWork uow, SaveRequest<MyRow> request)
-        {
-            return new MySaveHandler().Process(uow, request, SaveRequestType.Create);
+        { 
+            return new MySaveHandler(controller).Process(uow, request, SaveRequestType.Create);
         }
 
         public SaveResponse Update(IUnitOfWork uow, SaveRequest<MyRow> request)
         {
-            return new MySaveHandler().Process(uow, request, SaveRequestType.Update);
+            return new MySaveHandler(controller).Process(uow, request, SaveRequestType.Update);
         }
 
         public DeleteResponse Delete(IUnitOfWork uow, DeleteRequest request)
@@ -38,20 +44,25 @@ namespace CustomerSave.Customer.Repositories
             return new MyListHandler().Process(connection, request);
         }
 
+
         private class MySaveHandler : SaveRequestHandler<MyRow>
         {
+            private Controller controller;
+            
+            public MySaveHandler(Controller controller) : base() { this.controller = controller; }
+
             protected override void ValidateRequest()
             {
                 var customer = Request.Entity;
                 if (IsCreate)
                 {
                     customer.CustomerGivenId = GetNewCustomerId();
-                    customer.CreatedBy = User.CurrentUser.UserId;
+                    customer.CreatedBy = User.GetCurrentUser(controller.Request.HttpContext).UserId;
                     customer.CreatedDate = DateTime.Now;
                 }
                 else  //IsUpdate
                 {
-                    customer.ModifiedBy = User.CurrentUser.UserId;
+                    customer.ModifiedBy = User.GetCurrentUser(controller.Request.HttpContext).UserId;
                     customer.ModifiedDate = DateTime.Now;
                 }
                 customer.Validate();
@@ -76,8 +87,20 @@ namespace CustomerSave.Customer.Repositories
                 else return preId + newId;
             }
         }
-        private class MyDeleteHandler : DeleteRequestHandler<MyRow> { }
+
+        private class MyDeleteHandler : DeleteRequestHandler<MyRow>
+        {
+            protected override void ValidateRequest()
+            {
+                var count = new PaymentRepository().List(Connection, new ListRequest()).Entities.Where(p => p.CustomerId == (long)Request.EntityId).Count();
+                if (count > 0) throw new ValidationError("Patient has an active payment");
+
+                base.ValidateRequest();
+            }
+        }
+
         private class MyRetrieveHandler : RetrieveRequestHandler<MyRow> { }
+
         private class MyListHandler : ListRequestHandler<MyRow> { }
     }
 }

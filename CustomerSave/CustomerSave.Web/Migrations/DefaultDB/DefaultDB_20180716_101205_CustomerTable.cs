@@ -23,6 +23,12 @@ namespace CustomerSave.Migrations.DefaultDB
             .WithColumn("CreatedDate").AsDateTime().NotNullable()
             .WithColumn("ModifiedBy").AsInt32().Nullable()
             .WithColumn("ModifiedDate").AsDateTime().Nullable();
+
+            Create.Index("UQ_Customer_Id_Key")
+               .OnTable("Customer")
+               .OnColumn("CustomerId").Ascending()
+               .OnColumn("CustomerGivenId").Ascending()
+               .WithOptions().Unique();
         }
 
         public override void Down()

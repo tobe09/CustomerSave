@@ -22,7 +22,7 @@ namespace CustomerSave.Customer.Endpoints
         [HttpPost, AuthorizeUpdate(typeof(MyRow))]
         public SaveResponse Update(IUnitOfWork uow, SaveRequest<MyRow> request)
         {
-            throw new ValidationError("Record is read-only.");
+            throw new ValidationError("Record cannot be updated (Delete and post correct values).");
             //return new MyRepository().Update(uow, request);
         }
  

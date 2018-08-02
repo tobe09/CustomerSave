@@ -21,6 +21,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MailKit" Version="2.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.2" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="2.8.3" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" />
     <PackageReference Include="Serenity.FluentMigrator.Runner" Version="1.6.904" />
@@ -86,8 +87,5 @@
   </Target>
   <ItemGroup>
     <DotNetCliToolReference Include="Serenity.CodeGenerator" Version="3.7.4" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="wwwroot\Scripts\CustomerSaveScripts\MakePaymentScript.js" />
   </ItemGroup>
 </Project>

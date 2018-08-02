@@ -18,7 +18,7 @@ namespace CustomerSave.Migrations.DefaultDB
                 .OnColumn("UserId").Ascending()
                 .OnColumn("PermissionKey").Ascending()
                 .WithOptions().Unique();
-
+            
             this.CreateTableWithId32("Roles", "RoleId", s => s
                 .WithColumn("RoleName").AsString(100).NotNullable());
 
@@ -32,7 +32,7 @@ namespace CustomerSave.Migrations.DefaultDB
                 .OnColumn("RoleId").Ascending()
                 .OnColumn("PermissionKey").Ascending()
                 .WithOptions().Unique();
-
+            
             this.CreateTableWithId64("UserRoles", "UserRoleId", s => s
                 .WithColumn("UserId").AsInt32().NotNullable()
                     .ForeignKey("FK_UserRoles_UserId", "Users", "UserId")

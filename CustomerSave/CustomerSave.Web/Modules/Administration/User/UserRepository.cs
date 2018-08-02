@@ -227,6 +227,20 @@ namespace CustomerSave.Administration.Repositories
                 base.AfterSave();
 
                 BatchGenerationUpdater.OnCommit(this.UnitOfWork, fld.GenerationKey);
+
+                UpdateCommentTracker();
+            }
+
+            //added to track comments
+            private void UpdateCommentTracker()
+            {
+                string query = "select PaymentId from [dbo].Payment";
+                IEnumerable<int> paymentIds = Connection.Query<int>(query);
+                foreach (int paymentId in paymentIds)
+                {
+                    string insertQuery = "insert into [dbo].CommentTracker Values(@paymentid, @viewingAdminId, @lastViewDate)";
+                    Connection.Execute(insertQuery, new { paymentId, viewingAdminId = Request.Entity.UserId, lastViewDate = DateTime.Now });
+                }
             }
         }
 

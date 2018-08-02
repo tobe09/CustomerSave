@@ -23,7 +23,7 @@ namespace CustomerSave.Customer.Entities
             set { Fields.CustomerId[this] = value; }
         }
 
-        [DisplayName("Customer Given Id"), Size(12), NotNull, QuickSearch]
+        [DisplayName("Customer Id"), Size(12), NotNull, QuickSearch]
         public String CustomerGivenId
         {
             get { return Fields.CustomerGivenId[this]; }
@@ -58,28 +58,28 @@ namespace CustomerSave.Customer.Entities
             set { Fields.MiddleName[this] = value; }
         }
 
-        [DisplayName("Full Name"), Expression("(t0.FirstName + ', ' + t0.LastName + ISNULL(' ' + t0.MiddleName, ''))"), QuickSearch]
+        [DisplayName("Full Name"), Expression("(t0.LastName + ', ' + t0.FirstName + ISNULL(' ' + t0.MiddleName, ''))"), QuickSearch]
         public String FullName
         {
             get { return Fields.FullName[this]; }
             set { Fields.FullName[this] = value; }
         }
 
-        [DisplayName("Email"), Size(200), NotNull]
+        [DisplayName("Email Address"), Width(280), NotNull]
         public String Email
         {
             get { return Fields.Email[this]; }
             set { Fields.Email[this] = value; }
         }
 
-        [DisplayName("Phone No"), NotNull]
+        [DisplayName("Phone Number"), Width(150), NotNull]
         public Int64? PhoneNo
         {
             get { return Fields.PhoneNo[this]; }
             set { Fields.PhoneNo[this] = value; }
         }
 
-        [DisplayName("Phone No2")]
+        [DisplayName("Phone Number (2)")]
         public Int64? PhoneNo2
         {
             get { return Fields.PhoneNo2[this]; }
@@ -100,7 +100,7 @@ namespace CustomerSave.Customer.Entities
             set { Fields.CreatedBy[this] = value; }
         }
 
-        [DisplayName("Created Date"), NotNull]
+        [DisplayName("Created Date"), Width(150), NotNull]
         public DateTime? CreatedDate
         {
             get { return Fields.CreatedDate[this]; }

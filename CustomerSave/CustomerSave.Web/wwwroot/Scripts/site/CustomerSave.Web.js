@@ -432,6 +432,7 @@ var CustomerSave;
                     var w0 = s.IntegerEditor;
                     var w1 = s.StringEditor;
                     var w2 = s.DecimalEditor;
+                    var w3 = s.DateEditor;
                     Q.initFormType(PaymentForm, [
                         'CustomerId', w0,
                         'CustomerCustomerGivenId', w1,
@@ -439,7 +440,9 @@ var CustomerSave;
                         'CustomerFirstName', w1,
                         'CustomerLastName', w1,
                         'Amount', w2,
-                        'Description', w1
+                        'Description', w1,
+                        'CreatedDate', w3,
+                        'Total', w1
                     ]);
                 }
                 return _this;
@@ -614,37 +617,68 @@ var CustomerSave;
         Membership.SignUpForm = SignUpForm;
     })(Membership = CustomerSave.Membership || (CustomerSave.Membership = {}));
 })(CustomerSave || (CustomerSave = {}));
+///<reference path="../node_modules/@aspnet/signalr/dist/esm/index.d.ts" />
 var CustomerSave;
 (function (CustomerSave) {
-    var LanguageList;
-    (function (LanguageList) {
-        function getValue() {
-            var result = [];
-            for (var _i = 0, _a = CustomerSave.Administration.LanguageRow.getLookup().items; _i < _a.length; _i++) {
-                var k = _a[_i];
-                if (k.LanguageId !== 'en') {
-                    result.push([k.Id.toString(), k.LanguageName]);
-                }
-            }
-            return result;
+    var General = /** @class */ (function () {
+        function General() {
         }
-        LanguageList.getValue = getValue;
-    })(LanguageList = CustomerSave.LanguageList || (CustomerSave.LanguageList = {}));
-})(CustomerSave || (CustomerSave = {}));
-/// <reference path="../Common/Helpers/LanguageList.ts" />
-var CustomerSave;
-(function (CustomerSave) {
-    var ScriptInitialization;
-    (function (ScriptInitialization) {
-        Q.Config.responsiveDialogs = true;
-        Q.Config.rootNamespaces.push('CustomerSave');
-        Serenity.EntityDialog.defaultLanguageList = CustomerSave.LanguageList.getValue;
-        if ($.fn['colorbox']) {
-            $.fn['colorbox'].settings.maxWidth = "95%";
-            $.fn['colorbox'].settings.maxHeight = "95%";
-        }
-        window.onerror = Q.ErrorHandling.runtimeErrorHandler;
-    })(ScriptInitialization = CustomerSave.ScriptInitialization || (CustomerSave.ScriptInitialization = {}));
+        General.prototype.getCommentHubConnection = function () {
+            return new signalR.HubConnectionBuilder()
+                .withUrl(General.Constants.HubAddress)
+                .configureLogging(signalR.LogLevel.Information)
+                .build();
+        };
+        General.prototype.showErrorMsg = function (msg, msgSpan) {
+            if (msg === void 0) { msg = "Network Error Has Occured"; }
+            if (msgSpan === void 0) { msgSpan = $('.error-div'); }
+            msgSpan.text(msg);
+            msgSpan.removeClass('text-success');
+            msgSpan.addClass('text-danger');
+        };
+        General.prototype.showSuccessMsg = function (msg, msgSpan) {
+            if (msg === void 0) { msg = "Customer Found"; }
+            if (msgSpan === void 0) { msgSpan = $('.error-div'); }
+            msgSpan.text(msg);
+            msgSpan.removeClass('text-danger');
+            msgSpan.addClass('text-success');
+        };
+        General.prototype.networkApi = function (url, data, type) {
+            if (type === void 0) { type = "GET"; }
+            return new Promise(function (resolve, reject) {
+                $.ajax({
+                    dataType: "json",
+                    url: url,
+                    type: type,
+                    data: data,
+                    success: function (result) { return resolve(result); },
+                    error: function (err) { return reject(err); }
+                });
+            });
+        };
+        General.prototype.formatServerDate = function (date) {
+            var dateArr = date.split('-');
+            var year = parseInt(dateArr[0]);
+            var month = parseInt(dateArr[1]);
+            var day = parseInt(dateArr[2].substr(0, 2));
+            return month + "/" + day + "/" + year;
+        };
+        General.prototype.newCountForText = function (text, increment, valSingular, valPlural) {
+            if (valSingular === void 0) { valSingular = 'comment'; }
+            if (valPlural === void 0) { valPlural = 'comments'; }
+            var oldCount = text.substr(0, 1);
+            var newCount = parseInt(oldCount) + increment;
+            var isPlural = text.search(valPlural) > -1;
+            var newText = isPlural ? newCount + text.substring(1) : newCount + text.substring(1).replace(valSingular, valPlural);
+            return newText;
+        };
+        General.Constants = {
+            Sitename: 'CustomerSave',
+            HubAddress: "/CommentHub"
+        };
+        return General;
+    }());
+    CustomerSave.General = General;
 })(CustomerSave || (CustomerSave = {}));
 var CustomerSave;
 (function (CustomerSave) {
@@ -1178,6 +1212,22 @@ var CustomerSave;
 })(CustomerSave || (CustomerSave = {}));
 var CustomerSave;
 (function (CustomerSave) {
+    var Authorization;
+    (function (Authorization) {
+        Object.defineProperty(Authorization, 'userDefinition', {
+            get: function () {
+                return Q.getRemoteData('UserData');
+            }
+        });
+        function hasPermission(permissionKey) {
+            var ud = Authorization.userDefinition;
+            return ud.Username === 'admin' || !!ud.Permissions[permissionKey];
+        }
+        Authorization.hasPermission = hasPermission;
+    })(Authorization = CustomerSave.Authorization || (CustomerSave.Authorization = {}));
+})(CustomerSave || (CustomerSave = {}));
+var CustomerSave;
+(function (CustomerSave) {
     var Administration;
     (function (Administration) {
         var PermissionCheckEditor = /** @class */ (function (_super) {
@@ -1647,6 +1697,112 @@ var CustomerSave;
         }(Serenity.TemplatedDialog));
         Administration.UserRoleDialog = UserRoleDialog;
     })(Administration = CustomerSave.Administration || (CustomerSave.Administration = {}));
+})(CustomerSave || (CustomerSave = {}));
+var CustomerSave;
+(function (CustomerSave) {
+    var LanguageList;
+    (function (LanguageList) {
+        function getValue() {
+            var result = [];
+            for (var _i = 0, _a = CustomerSave.Administration.LanguageRow.getLookup().items; _i < _a.length; _i++) {
+                var k = _a[_i];
+                if (k.LanguageId !== 'en') {
+                    result.push([k.Id.toString(), k.LanguageName]);
+                }
+            }
+            return result;
+        }
+        LanguageList.getValue = getValue;
+    })(LanguageList = CustomerSave.LanguageList || (CustomerSave.LanguageList = {}));
+})(CustomerSave || (CustomerSave = {}));
+/// <reference path="../Common/Helpers/LanguageList.ts" />
+var CustomerSave;
+(function (CustomerSave) {
+    var ScriptInitialization;
+    (function (ScriptInitialization) {
+        Q.Config.responsiveDialogs = true;
+        Q.Config.rootNamespaces.push('CustomerSave');
+        Serenity.EntityDialog.defaultLanguageList = CustomerSave.LanguageList.getValue;
+        if ($.fn['colorbox']) {
+            $.fn['colorbox'].settings.maxWidth = "95%";
+            $.fn['colorbox'].settings.maxHeight = "95%";
+        }
+        window.onerror = Q.ErrorHandling.runtimeErrorHandler;
+    })(ScriptInitialization = CustomerSave.ScriptInitialization || (CustomerSave.ScriptInitialization = {}));
+})(CustomerSave || (CustomerSave = {}));
+var CustomerSave;
+(function (CustomerSave) {
+    var Customer;
+    (function (Customer) {
+        var Dashboard = /** @class */ (function (_super) {
+            __extends(Dashboard, _super);
+            function Dashboard() {
+                var _this = _super.call(this) || this;
+                _this.connection = _this.getCommentHubConnection();
+                return _this;
+            }
+            Dashboard.prototype.initializepage = function () {
+                var _this = this;
+                this.connection.start().then(function () {
+                    _this.onCommentAdded();
+                    console.log('connection started');
+                });
+            };
+            Dashboard.prototype.onCommentAdded = function () {
+                var _this = this;
+                //handle event from signalR for comment added
+                this.connection.on('commentAdded', function (_a) {
+                    var comment = _a.comment, paymentInfo = _a.paymentInfo;
+                    var table = $('.comment-table');
+                    var row = table.find('tr').filter(function (i, e) {
+                        var paymentId = $(e).data('payment-id');
+                        return paymentId === comment.paymentId;
+                    });
+                    if (row.length === 0) { //attach alert
+                        table.find('.table-header').css('display', ''); //to show table header
+                        var newAlertHtml = _this.getRowHtml(comment, paymentInfo);
+                        $(newAlertHtml).insertAfter(".comment-table tr:first");
+                        _this.resetHeding(table);
+                        _this.resetSerialNo(table);
+                    }
+                    else { //alert is among list of alerts, set new values
+                        var cell = row.find('td:eq(1)');
+                        var text = cell.text().trim();
+                        var newText = _this.newCountForText(text, 1);
+                        cell.text(newText);
+                        var senderCell = row.find('td:eq(3)');
+                        senderCell.text(comment.adminUsername.toUpperCase() + ' (' + _this.formatServerDate(comment.date) + ')');
+                    }
+                });
+            };
+            Dashboard.prototype.resetHeding = function (table) {
+                var heading = table.find('h4');
+                var textArr = heading.text().split('(');
+                var text = textArr[1].trim();
+                var oldCount = text.substr(0, 1);
+                var newCount = parseInt(oldCount) + 1;
+                var isZeroOrPlural = text.search('records') > -1 || text.search('0') > -1;
+                var newText = isZeroOrPlural ? textArr[0] + '(' + newCount + text.substring(1) : textArr[0] + '(' + newCount + ' records)';
+                console.log(newText);
+                heading.text(newText);
+            };
+            Dashboard.prototype.resetSerialNo = function (table) {
+                var rows = table.find('tr');
+                for (var i = 0; i < rows.length; i++) {
+                    if (i < 2)
+                        continue;
+                    var row = $(rows[i]);
+                    var snCell = row.find('td:first');
+                    snCell.text(i + '.');
+                }
+            };
+            Dashboard.prototype.getRowHtml = function (comment, paymentInfo) {
+                return "<tr data-payment-id=\"" + comment.paymentId + "\">\n                    <td>1.</td>\n                    <td>1 unread comment for " + paymentInfo.customerGivenId + "</td>\n                    <td>" + paymentInfo.description + "</td>\n                    <td>" + comment.adminUsername.toUpperCase() + " (" + this.formatServerDate(comment.date) + ")</td>\n                    <td><a href=\"/Customer/Payment?paymentId=" + comment.paymentId + "\">Open</a></td>\n                </tr>";
+            };
+            return Dashboard;
+        }(CustomerSave.General));
+        Customer.Dashboard = Dashboard;
+    })(Customer = CustomerSave.Customer || (CustomerSave.Customer = {}));
 })(CustomerSave || (CustomerSave = {}));
 var CustomerSave;
 (function (CustomerSave) {
@@ -2833,6 +2989,320 @@ var CustomerSave;
 (function (CustomerSave) {
     var Customer;
     (function (Customer) {
+        var MakePayments = /** @class */ (function (_super) {
+            __extends(MakePayments, _super);
+            function MakePayments() {
+                return _super !== null && _super.apply(this, arguments) || this;
+            }
+            MakePayments.prototype.initializePage = function () {
+                var _this = this;
+                $(function () {
+                    $('#CustomerGivenId').keyup(function (e) { return _this.checkByCustomerGivenId(e); });
+                    $('#Username').keyup(function (e) { return _this.checkByUsername(e); });
+                });
+            };
+            MakePayments.prototype.checkByCustomerGivenId = function (e) {
+                var _this = this;
+                var customerGivenId = $(e.currentTarget).val();
+                this.networkApi("/Customer/GetCustomerByGivenId", { customerGivenId: customerGivenId }).then(function (result) {
+                    _this.displayInfo(result, 'CustomerGivenId');
+                }, function (err) { return _this.showErrorMsg(); });
+            };
+            MakePayments.prototype.checkByUsername = function (e) {
+                var _this = this;
+                var username = $(e.currentTarget).val();
+                this.networkApi("/Customer/GetCustomerByUsername", { username: username }).then(function (result) {
+                    _this.displayInfo(result, 'Username');
+                }, function (err) { return _this.showErrorMsg(); });
+            };
+            MakePayments.prototype.displayInfo = function (result, type) {
+                if (result === null) {
+                    if (type === 'CustomerGivenId') {
+                        $('#Username').val('');
+                        this.showErrorMsg('No Matching Customer For Id');
+                    }
+                    else if (type === 'Username') {
+                        $('#CustomerGivenId').val('');
+                        this.showErrorMsg('No Matching Customer For Username');
+                    }
+                    $('#FirstName').val('');
+                    $('#LastName').val('');
+                    $('#submitBtn').prop('disabled', true);
+                    return;
+                }
+                else {
+                    this.setValues(result);
+                }
+            };
+            MakePayments.prototype.setValues = function (result) {
+                $('#CustomerGivenId').val(result.CustomerGivenId);
+                $('#Username').val(result.Username);
+                $('#FirstName').val(result.FirstName);
+                $('#LastName').val(result.LastName);
+                $('#submitBtn').prop('disabled', false);
+                this.showSuccessMsg();
+            };
+            return MakePayments;
+        }(CustomerSave.General));
+        Customer.MakePayments = MakePayments;
+    })(Customer = CustomerSave.Customer || (CustomerSave.Customer = {}));
+})(CustomerSave || (CustomerSave = {}));
+var CustomerSave;
+(function (CustomerSave) {
+    var Customer;
+    (function (Customer) {
+        var Payment = /** @class */ (function (_super) {
+            __extends(Payment, _super);
+            function Payment() {
+                var _this = _super.call(this) || this;
+                _this.constants = {
+                    commentLinks: 'a:contains("Comment")',
+                    paymentIdKey: 'payment-id',
+                    itemIdKey: 'item-id',
+                    closeLinks: '.single-alert .close',
+                    dismissDelay: 500,
+                    alertRows: '.comment-alerts .single-alert',
+                    alertComments: '.comment-alerts .showCommentDiv',
+                    commentModalId: '#commentModal',
+                    commentContentId: '#commentBody'
+                };
+                _this.connection = _this.getCommentHubConnection();
+                return _this;
+            }
+            Payment.prototype.initializePage = function () {
+                var _this = this;
+                return this.connection.start().then(function () {
+                    _this.removeSereneDefaults();
+                    _this.handleAlertClick();
+                    _this.handleAlertDismiss();
+                    _this.setAlertMargin();
+                    _this.handleCommentLinkClick();
+                    _this.returnedCommentsForPayment();
+                    _this.commentAddClick();
+                    _this.commentReturnedAfterAdd();
+                    _this.modalShown();
+                    _this.modalHidden();
+                    console.log('connection started');
+                }).catch(function (e) {
+                    if (e instanceof signalR.HttpError || e instanceof signalR.TimeoutError) {
+                        console.log('Error type: ' + typeof e);
+                        console.log('Error establishing connection');
+                    }
+                    else {
+                        console.log('Initialization error has occured');
+                        console.log(e.message);
+                    }
+                });
+            };
+            Payment.prototype.removeSereneDefaults = function () {
+                //attempt to remove serenity features from comment links
+                $(this.constants.commentLinks).each(function (i, e) {
+                    var that = $(e);
+                    that.attr('href', '#');
+                    that.removeClass('s-Customer-PaymentLink');
+                    that.attr('data-item-type', '');
+                });
+            };
+            Payment.prototype.handleAlertClick = function () {
+                var _this = this;
+                $(document).on('click', this.constants.alertComments, function (e) {
+                    var that = $(e.currentTarget);
+                    var singleAlertRow = that.parent();
+                    var paymentId = singleAlertRow.data(_this.constants.paymentIdKey); //get payment Id for alert
+                    var commentLink = $(_this.constants.commentLinks).filter(function (i, e) {
+                        return $(e).data(_this.constants.itemIdKey) === paymentId;
+                    });
+                    _this.commentClickDisplayInfo(commentLink);
+                });
+                //when link is clicked
+                $(document).on('click', '.open-link', function (e) {
+                    var link = $(e.currentTarget);
+                    link.parent().siblings(_this.constants.alertComments).click(); //invoke click of comment div
+                });
+            };
+            Payment.prototype.handleAlertDismiss = function () {
+                var _this = this;
+                $(document).on('click', this.constants.closeLinks, function (e) {
+                    var singleAlert = $(e.currentTarget).parent().parent();
+                    var paymentId = singleAlert.data(_this.constants.paymentIdKey);
+                    singleAlert.detach(); //remove alert link
+                    _this.setAlertMargin();
+                    _this.UpdateCommentTrackForPayment(paymentId);
+                });
+            };
+            Payment.prototype.handleCommentLinkClick = function () {
+                var _this = this;
+                //attach handlers for comment links click
+                $(this.constants.commentLinks).on('click', function (e) {
+                    var commentLink = $(e.currentTarget);
+                    return _this.commentClickDisplayInfo(commentLink);
+                });
+            };
+            Payment.prototype.commentClickDisplayInfo = function (commentLink) {
+                var paymentId = commentLink.data(this.constants.itemIdKey);
+                var commentModal = $(this.constants.commentModalId);
+                commentModal.modal('show');
+                commentModal.data(this.constants.paymentIdKey, paymentId);
+                //append details to comment modal
+                var div = commentLink.parent().parent();
+                var customerId = div.find('div:eq(0)').text();
+                var description = div.find('div:eq(3)').text();
+                var amount = div.find('div:eq(2)').text();
+                var date = div.find('div:eq(4)').text();
+                $('#customerIdSpan').text(customerId);
+                $('#descriptionSpan').text(description);
+                $('#amountSpan').text(amount);
+                $('#dateSpan').text(date);
+                this.connection.invoke('GetCommentsForRecord', paymentId); //get comments for payment record 
+                return false; //to stop event propagation
+            };
+            Payment.prototype.returnedCommentsForPayment = function () {
+                var _this = this;
+                this.connection.on('displayCommentsForRecord', function (comments) {
+                    var commentContent = $(_this.constants.commentContentId);
+                    var alert = $(_this.constants.alertRows).filter(function (i, e) {
+                        if (comments.length > 0) {
+                            return $(e).data(_this.constants.paymentIdKey) === comments[0].paymentId;
+                        }
+                        else {
+                            return false;
+                        }
+                    });
+                    alert.detach();
+                    _this.setAlertMargin();
+                    commentContent.html(''); //clear comment body for new values
+                    _this.displayComments(comments, commentContent);
+                });
+            };
+            Payment.prototype.setAlertMargin = function () {
+                var remaining = $(this.constants.alertRows).filter(function (i, e) {
+                    return $(e).css('display') === 'block';
+                }).length;
+                if (remaining === 0) {
+                    $('.comment-alerts').css('margin-bottom', '0px');
+                }
+                else {
+                    $('.comment-alerts').css('margin-bottom', '15px');
+                }
+            };
+            Payment.prototype.commentAddClick = function () {
+                var _this = this;
+                //send comment to server
+                $('#addCommentBtn').on('click', function () {
+                    var commentText = $('#commentInput').val();
+                    var paymentId = $(_this.constants.commentModalId).data(_this.constants.paymentIdKey);
+                    if (commentText === '' || commentText == null) { //if no comment is entered
+                        _this.showErrorMsg("(No comment entered)", $('#errMsg'));
+                    }
+                    else {
+                        $('#errMsg').text('');
+                        $('#commentInput').val('');
+                        _this.connection.invoke('SaveComment', { commentText: commentText, paymentId: paymentId }); //send comment to hub
+                    }
+                });
+            };
+            Payment.prototype.commentReturnedAfterAdd = function () {
+                var _this = this;
+                //handle event from signalR for comment added
+                this.connection.on('commentAdded', function (_a) {
+                    var comment = _a.comment, paymentInfo = _a.paymentInfo;
+                    var commentModal = $(_this.constants.commentModalId);
+                    var tabIsOpen = (commentModal.data(_this.constants.paymentIdKey) === comment.paymentId) && (commentModal.css('display') === 'block');
+                    if (tabIsOpen) { //display comment if tab is open
+                        _this.displayComments([comment], $(_this.constants.commentContentId));
+                        _this.scrollCommentBottom();
+                    }
+                    else { //inform user with alert if payment's commnent tab is not open
+                        var alertRow = $(_this.constants.alertRows).filter(function (i, e) {
+                            var paymentId = $(e).data(_this.constants.paymentIdKey);
+                            return paymentId === comment.paymentId;
+                        });
+                        if (alertRow.length === 0) { //attach alert
+                            var commentAlerts = $('.comment-alerts');
+                            var newAlert = _this.singleAlertHtml(comment, paymentInfo);
+                            commentAlerts.html(newAlert + commentAlerts.html());
+                            _this.setAlertMargin();
+                        }
+                        else { //alert is among list of alerts, update values
+                            var msgSpan = alertRow.find('.detail');
+                            var text = msgSpan.text().trim();
+                            var newText = _this.newCountForText(text, 1);
+                            msgSpan.text(newText);
+                            var lastMsgSenderDiv = msgSpan.siblings('.last-comment-user');
+                            lastMsgSenderDiv.text("Last Commentator: " + comment.adminUsername.toUpperCase() + " (" + _this.formatServerDate(comment.date) + ")");
+                        }
+                    }
+                });
+            };
+            Payment.prototype.singleAlertHtml = function (comment, paymentInfo) {
+                return "<div class=\"row alert-success fade in single-alert\" data-payment-id=\"" + comment.paymentId + "\">\n                    <div class=\"pull-right\">\n                        <a href=\"#\" class=\"open-link\">Open</a>\n                        <a href=\"#\" class=\"close\">&times;</a>\n                    </div>\n                    <div class=\"showCommentDiv\">\n                        <div class=\"newCommentText\">\n                            <div class=\"col-md-4 detail\">\n                                1 unread comment for " + paymentInfo.customerGivenId + "\n                            </div>\n                            <div class=\"col-md-3\">\n                                " + paymentInfo.description + "\n                            </div>\n                            <div class=\"col-md-4 last-comment-user\">\n                                Last Commentator: " + comment.adminUsername.toUpperCase() + " (" + this.formatServerDate(comment.date) + ")\n                            </div>\n                        </div>\n                    </div></div>";
+            };
+            Payment.prototype.displayComments = function (comments, commentBody) {
+                var value = "";
+                for (var _i = 0, comments_1 = comments; _i < comments_1.length; _i++) {
+                    var comment = comments_1[_i];
+                    value += this.htmlText(comment);
+                }
+                commentBody.html(commentBody.html() + value); //append text to comment body
+                this.showNoOfComments(comments.length);
+                var paymentId = $(this.constants.commentModalId).data(this.constants.paymentIdKey);
+                return this.UpdateCommentTrackForPayment(paymentId);
+            };
+            Payment.prototype.showNoOfComments = function (size) {
+                var msg = $('#commentMsg');
+                if (msg.text() == '') {
+                    msg.text("Number of comments: " + size);
+                }
+                else {
+                    var msgArr = msg.text().split(' ');
+                    var prevSize = parseInt(msgArr[msgArr.length - 1]);
+                    msg.text("Number of comments: " + (prevSize + size));
+                }
+            };
+            Payment.prototype.UpdateCommentTrackForPayment = function (paymentId) {
+                return this.connection.invoke('UpdateCommentTrackForPayment', paymentId); //update user comment view history
+            };
+            Payment.prototype.htmlText = function (comment) {
+                var formatNo = function (no) { return no < 10 ? '0' + no : '' + no; }; //function to append '0' to a single digit number
+                //convert date string to a presentable date
+                var date = (function (dateString) {
+                    var dayOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                    var innerDate = new Date(dateString);
+                    var formattedDate = dayOfWeek[innerDate.getDay()] + ", " + innerDate.getDate() + "/" + innerDate.getMonth() + "/" + innerDate.getFullYear() + " - \n                    " + innerDate.getHours() + ":" + formatNo(innerDate.getMinutes()) + ":" + formatNo(innerDate.getSeconds());
+                    return formattedDate;
+                })(comment.date);
+                var htmlValue = "<div class=\"row\" style=\"background-color: bisque; padding:5px; margin:15px; margin-top:0px;\"> \n                        <div class=\"col-sm-12\" style=\"font-size:16px;padding-bottom:5px;\">" + comment.commentText + "</div><div class=\"col-sm-4\"></div>\n                        <div class=\"col-sm-3 text-right\"> <small><b>" + comment.adminUsername.toUpperCase() + "</b></small></div> \n                        <div class=\"col-sm-5 text-right\"> <small>" + date + "</div> </small></div>";
+                return htmlValue;
+            };
+            Payment.prototype.modalShown = function () {
+                var _this = this;
+                //scroll to bottom of comments when it is opened
+                $(this.constants.commentModalId).on('shown.bs.modal', function () {
+                    _this.scrollCommentBottom();
+                });
+            };
+            Payment.prototype.modalHidden = function () {
+                var _this = this;
+                //clear values when modal is closed
+                $(this.constants.commentModalId).on('hidden.bs.modal', function () {
+                    $('#commentMsg').text(''); //clear message count
+                    $('#errMsg').text(''); //clear error messageconst commentModal = $(Payment.constants.commentModalId);
+                    $(_this.constants.commentModalId).data(_this.constants.paymentIdKey, -1);
+                });
+            };
+            Payment.prototype.scrollCommentBottom = function () {
+                var commentBody = $(this.constants.commentContentId);
+                commentBody.animate({ scrollTop: commentBody.prop("scrollHeight") }, "slow"); //scroll to bottom of page
+            };
+            return Payment;
+        }(CustomerSave.General));
+        Customer.Payment = Payment;
+    })(Customer = CustomerSave.Customer || (CustomerSave.Customer = {}));
+})(CustomerSave || (CustomerSave = {}));
+var CustomerSave;
+(function (CustomerSave) {
+    var Customer;
+    (function (Customer) {
         var PaymentDialog = /** @class */ (function (_super) {
             __extends(PaymentDialog, _super);
             function PaymentDialog() {
@@ -2867,6 +3337,14 @@ var CustomerSave;
             PaymentGrid.prototype.getIdProperty = function () { return Customer.PaymentRow.idProperty; };
             PaymentGrid.prototype.getLocalTextPrefix = function () { return Customer.PaymentRow.localTextPrefix; };
             PaymentGrid.prototype.getService = function () { return Customer.PaymentService.baseUrl; };
+            PaymentGrid.prototype.getQuickSearchFields = function () {
+                return [
+                    { name: "", title: "All" },
+                    { name: "CustomerFullName" /* CustomerFullName */, title: "Full Name" },
+                    { name: "CustomerCustomerGivenId" /* CustomerCustomerGivenId */, title: "Customer id" },
+                    { name: "Description" /* Description */, title: "Description" }
+                ];
+            };
             PaymentGrid = __decorate([
                 Serenity.Decorators.registerClass()
             ], PaymentGrid);
@@ -2874,22 +3352,6 @@ var CustomerSave;
         }(Serenity.EntityGrid));
         Customer.PaymentGrid = PaymentGrid;
     })(Customer = CustomerSave.Customer || (CustomerSave.Customer = {}));
-})(CustomerSave || (CustomerSave = {}));
-var CustomerSave;
-(function (CustomerSave) {
-    var Authorization;
-    (function (Authorization) {
-        Object.defineProperty(Authorization, 'userDefinition', {
-            get: function () {
-                return Q.getRemoteData('UserData');
-            }
-        });
-        function hasPermission(permissionKey) {
-            var ud = Authorization.userDefinition;
-            return ud.Username === 'admin' || !!ud.Permissions[permissionKey];
-        }
-        Authorization.hasPermission = hasPermission;
-    })(Authorization = CustomerSave.Authorization || (CustomerSave.Authorization = {}));
 })(CustomerSave || (CustomerSave = {}));
 var CustomerSave;
 (function (CustomerSave) {

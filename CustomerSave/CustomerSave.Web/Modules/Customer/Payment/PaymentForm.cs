@@ -16,5 +16,7 @@ namespace CustomerSave.Customer.Forms
         public String CustomerLastName { get; set; }
         public Decimal Amount { get; set; }
         public String Description { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public String Total { get; set; }
     }
 }

@@ -3,9 +3,12 @@
         PaymentId?: number;
         CustomerId?: number;
         Amount?: number;
+        AmountString?: string;
+        Total?: string;
         Description?: string;
         CreatedBy?: number;
         CreatedDate?: string;
+        Comment?: string;
         CustomerCustomerGivenId?: string;
         CustomerUsername?: string;
         CustomerFirstName?: string;
@@ -31,9 +34,12 @@
             PaymentId = "PaymentId",
             CustomerId = "CustomerId",
             Amount = "Amount",
+            AmountString = "AmountString",
+            Total = "Total",
             Description = "Description",
             CreatedBy = "CreatedBy",
             CreatedDate = "CreatedDate",
+            Comment = "Comment",
             CustomerCustomerGivenId = "CustomerCustomerGivenId",
             CustomerUsername = "CustomerUsername",
             CustomerFirstName = "CustomerFirstName",
