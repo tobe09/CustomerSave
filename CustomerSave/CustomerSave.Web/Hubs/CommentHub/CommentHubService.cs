@@ -9,7 +9,7 @@ namespace CustomerSave.Hubs
     public interface ICommentHubService
     {
         IEnumerable<Comment> GetCommentsForRecord(int paymentId);
-        CommentSaveResult SavePayment(Comment comment, User userId);
+        CommentSaveResult SaveCommentForPayment(Comment comment, User userId);
         IEnumerable<IGrouping<int, CommentInfo>> GetUnreadCommentsForUser(int userId);
         int UpdateCommentTrackForPayment(int paymentId, int userId);
     }
@@ -30,7 +30,7 @@ namespace CustomerSave.Hubs
             return comments;
         }
 
-        public CommentSaveResult SavePayment(Comment comment, User user)
+        public CommentSaveResult SaveCommentForPayment(Comment comment, User user)
         {
             int status = hubDao.InsertComment(comment, user.UserId);
 

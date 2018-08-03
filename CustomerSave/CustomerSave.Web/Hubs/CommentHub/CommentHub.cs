@@ -27,7 +27,7 @@ namespace CustomerSave.Hubs
         {
             var user = User.GetCurrentUser(contextAccessor.HttpContext);
 
-            var result = hubService.SavePayment(comment, user);
+            var result = hubService.SaveCommentForPayment(comment, user);
 
             await Clients.All.SendAsync("commentAdded", result);     //broadcast to clients
         }
@@ -35,6 +35,7 @@ namespace CustomerSave.Hubs
         public void UpdateCommentTrackForPayment(int paymentId)
         {
             int userId = User.GetCurrentUser(contextAccessor.HttpContext).UserId;
+
             hubService.UpdateCommentTrackForPayment(paymentId, userId);
         }
     }
